@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <?php
     $siti = App\Models\Site::where('J4', 1)->paginate(15);
     
@@ -61,9 +60,25 @@
                                             {{ Str::limit($sito->token, 20) }}
                                         </th>
 
-                                        <td class="px-6 py-4">
-                                            <a href="#"
-                                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                        <td x-data="{
+                                            user_id: {{ Auth::user()->id }},
+                                            async creaUtenteJoomla(site_id) {
+                                                console.log(site_id, this.user_id)
+                                        
+                                                let r = await axios.post('/creautente', { site_id: site_id, user_id: this.user_id })
+                                        
+                                                alert(JSON.stringify(r.data.data));
+                                        
+                                            }
+                                        }" class="px-6 py-4 cursor-pointer">
+                                            <span @click="creaUtenteJoomla({{ $sito->id }})"
+                                                class="font-medium text-red-600 dark:text-red-500 hover:underline">
+                                                @if (Auth::user()->admin)
+                                                    Edit
+                                                @else
+                                                    Accedi
+                                                @endif
+                                            </span>
                                         </td>
                                     </tr>
                                 @endforeach
