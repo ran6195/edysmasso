@@ -62,23 +62,35 @@
 
                                         <td x-data="{
                                             user_id: {{ Auth::user()->id }},
-                                            async creaUtenteJoomla(site_id) {
-                                                console.log(site_id, this.user_id)
+                                            async creaUtenteJoomla(site_id, event) {
                                         
-                                                let r = await axios.post('/creautente', { site_id: site_id, user_id: this.user_id })
+                                                //console.log(site_id, this.user_id, event.target)
                                         
-                                                alert(JSON.stringify(r.data.data));
+                                                let r = await axios.post('/creautente', { site_id: site_id })
+                                        
+                                                data = r.data
+                                                if (data.status == 500) {
+                                                    alert(`Errore sul server: ${JSON.parse(data.body)['errors']['title']}`)
+                                                } else if (data.status == 401) {
+                                                    alert(`Errore di autenticazione: ${JSON.parse(data.body)['errors'][0]['title']}\nControlla il token`)
+                                                } else if (data.status == 200) {
+                                                    alert(`La chimata ha avuto successo`)
+                                        
+                                                    //event.target.setAttribute('disabled', true)
+                                                }
                                         
                                             }
                                         }" class="px-6 py-4 cursor-pointer">
-                                            <span @click="creaUtenteJoomla({{ $sito->id }})"
-                                                class="font-medium text-red-600 dark:text-red-500 hover:underline">
-                                                @if (Auth::user()->admin)
-                                                    Edit
-                                                @else
+
+                                            @if (Auth::user()->admin)
+                                                Edit
+                                            @else
+                                                <button @click="creaUtenteJoomla({{ $sito->id }}, $event )"
+                                                    class="font-medium text-red-600 dark:text-red-500 hover:underline">
                                                     Accedi
-                                                @endif
-                                            </span>
+                                                </button>
+                                            @endif
+
                                         </td>
                                     </tr>
                                 @endforeach
