@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+
 use App\Models\Site;
+use App\Models\SiteUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -19,17 +20,13 @@ class UtenteJoomlaController extends Controller
 
         //dd($sito);
         //$utente = User::find($request->user_id);
-        $response = Http::withHeaders([
-            'Accept' => '*/*',
-            'Content-type' => 'application/json',
-            'Authorization' => "Bearer $sito->token"
-        ])->get("https://www.$sito->domainName/api/index.php/v1/users");
 
         //$response = Http::withHeaders([
-        //    'Accept' => '*/*' ,
-        //    'Content-type' => 'application/json' ,
-        //    'Authorization' => 'Bearer c2hhMjU2OjUwMzo5NGJhODU1NDUzMWFlNTQxM2NiYzg4OTYxMTQxYzA2ZjhjMWQzMzg2MWNlNWVmZjA4MWYzNWZhNjFjNmM3N2Yz'
-        //])->post("https://www.$sito->domainName/api/index.php/v1/users", ['username' => $user->username_joomla,'email'=>,'name'=>'pippo','groups'=>['7']]);
+        //    'Accept' => '*/*',
+        //    'Content-type' => 'application/json',
+        //    'Authorization' => "Bearer $sito->token"
+        //])->get("https://www.$sito->domainName/api/index.php/v1/users");
+
 
         $response = Http::withHeaders([
             'Accept' => '*/*',
@@ -60,8 +57,28 @@ class UtenteJoomlaController extends Controller
 
         ]);
 
+        $status = $response->status();
+        $body = $response->body();
+
 
         // dd($response->status());
-        return ["status" => $response->status(), "body" => $response->body()];
+        return ["status" => $status, "body" => $body];
+    }
+
+    public function authUser(Request $request)
+    {
+
+        if (SiteUser::where([['site_id', $request->site_id], ['user_id', $request->user_id]])->count() == 0) {
+
+            $us = new SiteUser();
+            $us->site_id = $request->site_id;
+            $us->user_id = $request->user_id;
+
+            $us->save();
+
+            return ['messaggio' => 'Associazione creata'];
+        }
+
+        return ['messaggio' => 'Associazione già esistente'];
     }
 }

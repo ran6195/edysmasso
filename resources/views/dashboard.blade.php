@@ -1,6 +1,12 @@
 <x-app-layout>
     <?php
-    $siti = App\Models\Site::where('J4', 1)->paginate(15);
+    if (Auth::user()->admin) {
+        $siti = App\Models\Site::where('J4', 1)->paginate(15);
+    } else {
+        $siti = Auth::user()->siti;
+    
+        $siti = App\Helpers\PaginationHelper::paginate($siti, 15);
+    }
     
     ?>
 
@@ -20,7 +26,10 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
 
-                    <div class="mb-5">{{ $siti->links() }}</div>
+                    @if (method_exists($siti, 'links'))
+                        <div class="mb-5">{{ $siti->links() }}</div>
+                    @endif
+
 
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -74,9 +83,11 @@
                                                 } else if (data.status == 401) {
                                                     alert(`Errore di autenticazione: ${JSON.parse(data.body)['errors'][0]['title']}\nControlla il token`)
                                                 } else if (data.status == 200) {
-                                                    alert(`La chimata ha avuto successo`)
+                                                    alert(`La chiamata ha avuto successo`)
                                         
                                                     //event.target.setAttribute('disabled', true)
+                                                } else if (data.status == 400) {
+                                                    alert(`Si è verificato un errore: ${JSON.parse(data.body)['errors'][0]['title']}`)
                                                 }
                                         
                                             }
@@ -102,7 +113,12 @@
 
 
                     </div>
-                    <div class="mt-5">{{ $siti->links() }}</div>
+                    @if (method_exists($siti, 'links'))
+                        <div class="mt-5">{{ $siti->links() }}</div>
+                    @endif
+
+
+
                 </div>
             </div>
         </div>

@@ -21,6 +21,10 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::view('autorizza', 'autorizza')
+    ->middleware(['auth', 'verified'])
+    ->name('autorizza');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
@@ -28,6 +32,7 @@ Route::view('profile', 'profile')
 
 Route::group(['api'], function () {
     Route::post('creautente', [UtenteJoomlaController::class, 'creaUtenteJoomla']);
+    Route::post('authUser', [UtenteJoomlaController::class, 'authUser']);
 })->middleware(['auth']);
 
 require __DIR__ . '/auth.php';
