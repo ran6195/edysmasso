@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\HtmlController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtenteJoomlaController;
 
@@ -33,6 +33,11 @@ Route::view('profile', 'profile')
 Route::group(['api'], function () {
     Route::post('creautente', [UtenteJoomlaController::class, 'creaUtenteJoomla']);
     Route::post('authUser', [UtenteJoomlaController::class, 'authUser']);
+})->middleware(['auth']);
+
+
+Route::group(['html'], function () {
+    Route::post('tabella_autorizzazioni', [HtmlController::class, 'tabella_autorizzazioni']);
 })->middleware(['auth']);
 
 require __DIR__ . '/auth.php';

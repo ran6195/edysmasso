@@ -31,9 +31,15 @@
                         
                                 let r = await axios.post('/authUser', { user_id: user_id, site_id: site_id })
                         
+                                let h = await axios.post('tabella_autorizzazioni', {
+                                    righe: '',
+                                })
+                        
+                        
+                                container_tabella_aut.innerHTML = h.data
                                 alert(r.data.messaggio)
                         
-                        
+                                //dispatchEvent(new CustomEvent('open-modal', { detail: 'autorizza' }))
                             }
                         }" class="grid grid-cols-3 gap-2">
                             <x-form.select name="user" :options="$users" option_caption="name" />
@@ -41,35 +47,20 @@
                             <x-primary-button @click="autorizza()">Autorizza</x-primary-button>
                         </div>
 
-                        <div class="mt-10 p-6 text-gray-900">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead
-                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">Sito</th>
-                                        <th scope="col" class="px-6 py-3">Utenti Autorizzati</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($siti_con_autorizzazioni as $item)
-                                        <tr
-                                            class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                            <td class="px-6 py-4">
-                                                {{ $item->domainName }}
-                                            </td>
-                                            <td>
-                                                @foreach ($item->utenti as $i)
-                                                    <span
-                                                        class="px-2 py-2 rounded-md mx-1 bg-slate-800 font-semibold text-white">{{ $i->name }}
-                                                    </span>
-                                                @endforeach
+                        <div x-data="{
+                            html: '',
+                            async init() {
+                                let r = await axios.post('tabella_autorizzazioni', {
+                                    righe: {{ json_encode($siti_con_autorizzazioni) }}
+                                })
+                        
+                        
+                                this.html = r.data
+                        
+                            }
+                        }" x-html="html"
+                            class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10" id="container_tabella_aut">
 
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-
-                            </table>
                         </div>
 
 
@@ -80,6 +71,9 @@
             </div>
         </div>
     </div>
+
+
+    <x-modal name="autorizza"></x-modal>
 
 
 
