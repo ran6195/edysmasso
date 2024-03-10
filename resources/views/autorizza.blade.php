@@ -17,6 +17,8 @@
 
 
 
+
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -37,13 +39,16 @@
                         
                         
                                 container_tabella_aut.innerHTML = h.data
-                                alert(r.data.messaggio)
+                                //alert(r.data.messaggio)
                         
-                                //dispatchEvent(new CustomEvent('open-modal', { detail: 'autorizza' }))
+                                modal_content.innerHTML = r.data.messaggio
+                        
+                                dispatchEvent(new CustomEvent('open-modal', { detail: 'autorizza' }))
                             }
                         }" class="grid grid-cols-3 gap-2">
                             <x-form.select name="user" :options="$users" option_caption="name" />
                             <x-form.select name="siti" :options="$siti" option_caption="domainName" />
+
                             <x-primary-button @click="autorizza()">Autorizza</x-primary-button>
                         </div>
 
@@ -59,7 +64,9 @@
                         
                             }
                         }" x-html="html"
-                            class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10" id="container_tabella_aut">
+                            class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10
+                            "
+                            id="container_tabella_aut">
 
                         </div>
 

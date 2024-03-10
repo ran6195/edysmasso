@@ -14,6 +14,6 @@ class Site extends Model
 
     public function utenti(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->using(SiteUser::class);
+        return $this->belongsToMany(User::class)->using(SiteUser::class)->withTimestamps()->wherePivot('deleted_at');
     }
 }

@@ -48,6 +48,6 @@ class User extends Authenticatable
 
     public function siti(): BelongsToMany
     {
-        return $this->belongsToMany(Site::class)->using(SiteUser::class);
+        return $this->belongsToMany(Site::class)->using(SiteUser::class)->withTimestamps()->wherePivot('deleted_at');
     }
 }

@@ -25,6 +25,10 @@ Route::view('autorizza', 'autorizza')
     ->middleware(['auth', 'verified'])
     ->name('autorizza');
 
+Route::view('autorizza2', 'autorizza2')
+    ->middleware(['auth', 'verified'])
+    ->name('autorizza2');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
@@ -33,6 +37,7 @@ Route::view('profile', 'profile')
 Route::group(['api'], function () {
     Route::post('creautente', [UtenteJoomlaController::class, 'creaUtenteJoomla']);
     Route::post('authUser', [UtenteJoomlaController::class, 'authUser']);
+    Route::post('toggleAuthUser', [UtenteJoomlaController::class, 'toggleAuthUser']);
 })->middleware(['auth']);
 
 

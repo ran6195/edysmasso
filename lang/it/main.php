@@ -2,5 +2,6 @@
 
 return [
     "login_ok" => "Hai effettuato il login correttamente",
-    "autorizza" => "Qui puoi autorizzare gli utenti ai siti"
+    "autorizza" => "Qui puoi autorizzare gli utenti ai siti",
+    "autorizza2" => "Autorizza alternativa"
 ];
