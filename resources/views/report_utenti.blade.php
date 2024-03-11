@@ -37,8 +37,14 @@
                                 })
                             },
                             async ottieni_utenti_sito(site_id) {
-                                let r = await axios.post('listaUtenti', { site_id: site_id })
+                    
                                 let cella = document.querySelector(`[data-site='${site_id}']`)
+                    
+                                cella.innerHTML = `<div class='text-wrap p-2 text-center bg-green-500 text-white font-semibold rounded-md'>Controllo sul sito...</div>`
+                    
+                    
+                                let r = await axios.post('listaUtenti', { site_id: site_id })
+                    
                                 r = r.data
                     
                                 if (r.length) {

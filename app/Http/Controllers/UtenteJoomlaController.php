@@ -110,7 +110,7 @@ class UtenteJoomlaController extends Controller
             'Accept' => '*/*',
             'Content-type' => 'application/json',
             "Authorization" => "Bearer $s->token"
-        ])->get("https://www.$s->domainName/api/index.php/v1/users");
+        ])->get("https://www.$s->domainName/api/index.php/v1/users?page[offset]=0&page[limit]=500");
 
 
 
@@ -135,7 +135,7 @@ class UtenteJoomlaController extends Controller
                 'Accept' => '*/*',
                 'Content-type' => 'application/json',
                 "Authorization" => "Bearer $s->token"
-            ])->get("https://www.$s->domainName/api/index.php/v1/users");
+            ])->get("https://www.$s->domainName/api/index.php/v1/users?page[offset]=0&page[limit]=500");
 
             return $response->json('data');
         }
