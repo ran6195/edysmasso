@@ -31,7 +31,7 @@
                                         if (r.data) {
                                             console.log(r.data)
                                             e.classList.add('bg-blue-400')
-                                            console.log(e.classList)
+                    
                                         } else {
                                             e.classList.remove('bg-blue-400')
                                         }
@@ -54,7 +54,7 @@
                                 <th class="py-7"></th>
                                 @foreach ($users as $u)
                                     <th x-on:click="abilita_utente({{ $u->id }})"
-                                        class="py-7 cursor-pointer hover:bg-gray-300 transition-all ease-in-out duration-300 rounded-md">
+                                        class="py-7 cursor-pointer bg-slate-100 hover:bg-gray-300 transition-all ease-in-out duration-300 rounded-md">
                                         <div class="-rotate-90">{{ $u->name }}</div>
                                     </th>
                                 @endforeach
@@ -65,7 +65,6 @@
                             @foreach ($siti as $sito)
                                 <tr>
                                     <td x-on:click="autorizza_tutti_sito({{ $sito->id }})"
-                                        data-tooltip-target="tooltip-default-sito"
                                         class="text-right px-2 cursor-pointer rounded-md hover:bg-gray-300 bg-slate-100 font-semibold text-slate-700 transition-all">
                                         {{ $sito->domainName }}</td>
                                     @foreach ($users as $u)
@@ -103,15 +102,6 @@
             </div>
         </div>
     </div>
-
-
-
-    <div id="tooltip-default-sito" role="tooltip"
-        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
-    </div>
-
-
-
 
 
     <x-modal name="autorizza"></x-modal>

@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\SiteUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
+use Livewire\Volt\Actions\ReturnTitle;
 
 class UtenteJoomlaController extends Controller
 {
@@ -125,6 +125,24 @@ class UtenteJoomlaController extends Controller
         return -1;
     }
 
+    public function getJoomlaUserList(Request $request)
+    {
+        $s = Site::find($request->site_id);
+
+
+        if ($s->token) {
+            $response = Http::withHeaders([
+                'Accept' => '*/*',
+                'Content-type' => 'application/json',
+                "Authorization" => "Bearer $s->token"
+            ])->get("https://www.$s->domainName/api/index.php/v1/users");
+
+            return $response->json('data');
+        }
+
+        return [];
+    }
+
 
     public function authUser(Request $request)
     {
@@ -142,13 +160,6 @@ class UtenteJoomlaController extends Controller
 
         return ['messaggio' => 'Associazione già esistente'];
     }
-
-
-
-
-
-
-
 
     public function toggleAuthUser(Request $request)
     {
