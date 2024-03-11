@@ -33,12 +33,8 @@ new class extends Component {
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     @if (Auth::user()->admin)
-                        <x-nav-link :href="route('autorizza')" :active="request()->routeIs('autorizza')" wire:navigate>
-                            {{ __('Autorizza') }}
-                        </x-nav-link>
-
                         <x-nav-link :href="route('autorizza2')" :active="request()->routeIs('autorizza2')" wire:navigate>
-                            {{ __('Autorizza2') }}
+                            {{ __('Autorizza') }}
                         </x-nav-link>
                         <x-nav-link :href="route('report_utenti')" :active="request()->routeIs('report_utenti')" wire:navigate>
                             {{ __('Report') }}
