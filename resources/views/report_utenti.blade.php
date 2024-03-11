@@ -20,22 +20,39 @@
 
                     <table class="table w-full" x-data="{
                         async init() {
-                            let el = document.querySelectorAll(`[data-site]`)
+                                let el = document.querySelectorAll(`[data-site]`)
                     
-                            el.forEach(async el => {
-                                let r = await axios.post('listaUtenti', { site_id: el.dataset.site })
+                                el.forEach(async el => {
+                                    let r = await axios.post('listaUtenti', { site_id: el.dataset.site })
+                                    r = r.data
+                                    if (r.length) {
+                                        let h = `<div class='grid grid-flow-row grid-cols-6 gap-2'>`
+                                        r.forEach(e => {
+                                            h += `<div class='text-wrap p-2 text-center bg-slate-700 text-white font-semibold rounded-md'>${e.attributes.username}</div>`
+                                        })
+                                        el.innerHTML = h + '</div>'
+                                    } else {
+                                        el.innerHTML = `<div class='text-wrap p-2 text-center bg-red-700 text-white font-semibold rounded-md'>Si è verificato un errore</div>`
+                                    }
+                                })
+                            },
+                            async ottieni_utenti_sito(site_id) {
+                                let r = await axios.post('listaUtenti', { site_id: site_id })
+                                let cella = document.querySelector(`[data-site='${site_id}']`)
                                 r = r.data
+                    
                                 if (r.length) {
                                     let h = `<div class='grid grid-flow-row grid-cols-6 gap-2'>`
                                     r.forEach(e => {
                                         h += `<div class='text-wrap p-2 text-center bg-slate-700 text-white font-semibold rounded-md'>${e.attributes.username}</div>`
                                     })
-                                    el.innerHTML = h + '</div>'
+                                    cella.innerHTML = h + '</div>'
                                 } else {
-                                    el.innerHTML = `<div class='text-wrap p-2 text-center bg-red-700 text-white font-semibold rounded-md'>Si è verificato un errore</div>`
+                                    cella.innerHTML = `<div class='text-wrap p-2 text-center bg-red-700 text-white font-semibold rounded-md'>Si è verificato un errore</div>`
                                 }
-                            })
-                        }
+                    
+                    
+                            }
                     }">
                         <thead>
                             <tr class="table-row">
@@ -48,7 +65,9 @@
                             @foreach ($siti as $sito)
                                 <tr class="text-right table-row">
 
-                                    <th class="w-[6%]">{{ $sito->domainName }}</th>
+                                    <th x-on:click="ottieni_utenti_sito({{ $sito->id }})"
+                                        class="w-[6%] cursor-pointer hover:bg-slate-300 transition-all ease-in-out duration-300 rounded-md">
+                                        {{ $sito->domainName }}</th>
 
                                     <td data-site="{{ $sito->id }}" class="table-cell p-2 text-left"></td>
                                 </tr>
