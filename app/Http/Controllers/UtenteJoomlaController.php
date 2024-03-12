@@ -187,30 +187,7 @@ class UtenteJoomlaController extends Controller
         return;
     }
 
-    public function toggleAuthUserOLD(Request $request)
-    {
-        $au = SiteUser::where([['site_id', $request->site_id], ['user_id', $request->user_id]]);
 
-        if ($au->count()) {
-            //$this->deleteUtenteJoomla($request);
-            $this->blockUtenteJoomla($request);
-            $au->delete();
-            return 0;
-        } else {
-            $au = SiteUser::where([['site_id', $request->site_id], ['user_id', $request->user_id]])->withTrashed();
-            if ($au->count()) {
-                $au->restore();
-            } else {
-                $us = new SiteUser();
-                $us->site_id = $request->site_id;
-                $us->user_id = $request->user_id;
-
-                $us->save();
-            }
-
-            return $this->createUtenteJoomla($request)['status'];
-        }
-    }
 
     public function toggleAuthUser(Request $request)
     {
