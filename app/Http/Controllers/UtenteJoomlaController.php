@@ -15,8 +15,6 @@ class UtenteJoomlaController extends Controller
     public function createUtenteJoomla(Request $request)
     {
 
-        //dd($request->user_id);
-
         $sito = Site::find($request->site_id);
 
         if (isset($request->user_id)) {
@@ -24,17 +22,6 @@ class UtenteJoomlaController extends Controller
         } else {
             $user = auth()->user();
         }
-
-
-
-        //dd($sito);
-        //$utente = User::find($request->user_id);
-
-        //$response = Http::withHeaders([
-        //    'Accept' => '*/*',
-        //    'Content-type' => 'application/json',
-        //    'Authorization' => "Bearer $sito->token"
-        //])->get("https://www.$sito->domainName/api/index.php/v1/users");
 
 
         $response = Http::withHeaders([
@@ -161,12 +148,52 @@ class UtenteJoomlaController extends Controller
         return ['messaggio' => 'Associazione già esistente'];
     }
 
-    public function toggleAuthUser(Request $request)
+    public function blockUtenteJoomla(Request $request)
+    {
+        $s  = Site::find($request->site_id);
+
+        $id = $this->getJoomlaUserId($request);
+
+        if ($id) {
+            $response = Http::withHeaders([
+                'Accept' => '*/*',
+                'Content-type' => 'application/json',
+                "Authorization" => "Bearer $s->token"
+            ])->patch("https://www.$s->domainName/api/index.php/v1/users/$id", ["block" => 1, "groups" => [7]]);
+
+            return $response->body();
+        }
+
+        return;
+    }
+
+
+    public function unblockUtenteJoomla(Request $request)
+    {
+        $s  = Site::find($request->site_id);
+
+        $id = $this->getJoomlaUserId($request);
+
+        if ($id) {
+            $response = Http::withHeaders([
+                'Accept' => '*/*',
+                'Content-type' => 'application/json',
+                "Authorization" => "Bearer $s->token"
+            ])->patch("https://www.$s->domainName/api/index.php/v1/users/$id", ["block" => 0, "groups" => [7]]);
+
+            return $response->body();
+        }
+
+        return;
+    }
+
+    public function toggleAuthUserOLD(Request $request)
     {
         $au = SiteUser::where([['site_id', $request->site_id], ['user_id', $request->user_id]]);
 
         if ($au->count()) {
-            $this->deleteUtenteJoomla($request);
+            //$this->deleteUtenteJoomla($request);
+            $this->blockUtenteJoomla($request);
             $au->delete();
             return 0;
         } else {
@@ -182,6 +209,31 @@ class UtenteJoomlaController extends Controller
             }
 
             return $this->createUtenteJoomla($request)['status'];
+        }
+    }
+
+    public function toggleAuthUser(Request $request)
+    {
+        $au = SiteUser::where([['site_id', $request->site_id], ['user_id', $request->user_id]]);
+
+        if ($au->count()) {
+            //$this->deleteUtenteJoomla($request);
+            $this->blockUtenteJoomla($request);
+            $au->delete();
+            return 0;
+        } else {
+            $au = SiteUser::where([['site_id', $request->site_id], ['user_id', $request->user_id]])->withTrashed();
+            if ($au->count()) {
+                $au->restore();
+                return $this->unblockUtenteJoomla($request);
+            } else {
+                $us = new SiteUser();
+                $us->site_id = $request->site_id;
+                $us->user_id = $request->user_id;
+
+                $us->save();
+                return $this->createUtenteJoomla($request)['status'];
+            }
         }
     }
 }

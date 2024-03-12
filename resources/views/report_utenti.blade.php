@@ -28,7 +28,12 @@
                                     if (r.length) {
                                         let h = `<div class='grid grid-flow-row grid-cols-6 gap-2'>`
                                         r.forEach(e => {
-                                            h += `<div class='text-wrap p-2 text-center bg-slate-700 text-white font-semibold rounded-md'>${e.attributes.username}</div>`
+                                            if (e.attributes.block == 1) {
+                                                bg = 'bg-slate-300'
+                                            } else {
+                                                bg = 'bg-slate-700'
+                                            }
+                                            h += `<div class='text-wrap p-2 text-center ${bg} text-white font-semibold rounded-md'>${e.attributes.username}</div>`
                                         })
                                         el.innerHTML = h + '</div>'
                                     } else {
@@ -44,13 +49,22 @@
                     
                     
                                 let r = await axios.post('listaUtenti', { site_id: site_id })
-                    
+                                let bg
                                 r = r.data
                     
                                 if (r.length) {
                                     let h = `<div class='grid grid-flow-row grid-cols-6 gap-2'>`
                                     r.forEach(e => {
-                                        h += `<div class='text-wrap p-2 text-center bg-slate-700 text-white font-semibold rounded-md'>${e.attributes.username}</div>`
+                    
+                                        if (e.attributes.block == 1) {
+                                            bg = 'bg-slate-300'
+                                        } else {
+                                            bg = 'bg-slate-700'
+                                        }
+                    
+                    
+                    
+                                        h += `<div class='text-wrap p-2 text-center ${bg} text-white font-semibold rounded-md'>${e.attributes.username}</div>`
                                     })
                                     cella.innerHTML = h + '</div>'
                                 } else {

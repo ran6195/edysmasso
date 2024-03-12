@@ -28,6 +28,7 @@
                         async autorizza(user_id, site_id, e) {
                                 axios.post('/toggleAuthUser', { site_id: site_id, user_id: user_id })
                                     .then(r => {
+                                        console.log(r)
                                         if (r.data) {
                                             console.log(r.data)
                                             e.classList.add('bg-blue-400')
