@@ -11,6 +11,11 @@ class Site extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $fillable = [
+        'domainName',
+        'J4',
+        'token'
+    ];
 
     public function utenti(): BelongsToMany
     {

@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -10,7 +13,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+use function PHPUnit\Framework\returnSelf;
+
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -49,5 +54,10 @@ class User extends Authenticatable
     public function siti(): BelongsToMany
     {
         return $this->belongsToMany(Site::class)->using(SiteUser::class)->withTimestamps()->wherePivot('deleted_at');
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->admin;
     }
 }
